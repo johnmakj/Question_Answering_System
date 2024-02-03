@@ -1,0 +1,39 @@
+[tool.poetry]
+name = 'src'
+version = '0.0.1'  # Major.Minor.Patch
+description = 'Question Answering System'
+authors = [
+    'Makris Yannis',
+]
+readme = 'README.md'
+homepage = 'https://app-leap.pipacorp.com/'
+repository = 'https://github.com/PIPACorp/Knowledge_Graph_Engine'
+
+
+[tool.poetry.dependencies]
+python = '>=3.10.6,<3.11'
+
+cython = '~0.29.24'
+en-core-web-sm = '3.4.1'
+huggingface_hub = '*'
+matplotlib = '~3.4.3'
+numpy = '1.22.1'
+pandas = '~1.3.2'
+rank-bm25 = '0.2.2'
+scikit-learn = '1.4.0'
+spacy = '3.4.3'
+streamlit = '~1.31.0'
+torch = '*'
+transformers = "^4.37.2"
+urllib3 = '~1.26.6'
+
+[tool.poetry.dev-dependencies]
+notebook = '^6.2.0'
+
+
+[tool.pytest.ini_options]
+filterwarnings = []  # https://docs.pytest.org/en/stable/warnings.html
+
+[build-system]
+requires = ['poetry-core>=1.0.0']
+build-backend = 'poetry.core.masonry.api'
