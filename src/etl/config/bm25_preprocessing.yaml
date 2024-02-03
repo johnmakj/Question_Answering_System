@@ -1,0 +1,7 @@
+#configuration file for bm25 text preprocessing
+
+nlp_pipeline:
+  lowercase: 1
+  remove_punctuation: 1
+  stopword_removal: 1
+  lemmatize: 0
