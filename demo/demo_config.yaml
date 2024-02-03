@@ -1,0 +1,7 @@
+# configuration file for streamlit demo
+
+demo:
+  dataset: dev_preprocessed_lowercase_remove_punctuation_remove_stopwords.pkl
+  nlp: dev_nlp_pipeline_lowercase_remove_punctuation_remove_stopwords.pkl
+  ranker: bm25_lowercase_remove_punctuation_remove_stopwords.pkl
+  bert_file: jmakj/bert-base-finetuned-squad
