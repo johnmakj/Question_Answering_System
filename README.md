@@ -46,3 +46,5 @@ All the configuration parameters for data preprocessing are in [this yaml file](
 and all configuration parameters for the BERT are in [this yaml file](src/machine_learning/config/bert_config.yaml)
 
 To run the streamlit app with your own data please change the [configuration file](demo/demo_config.yaml)
+
+The model was deployed on an EC2 instance, and the app can be accessed through this [link](http://51.20.34.139:8501/)
