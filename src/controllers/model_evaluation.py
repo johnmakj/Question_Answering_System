@@ -67,6 +67,6 @@ if __name__ == "__main__":
     if args.model in ['BM25', 'bm25']:
         evaluator.evaluate_bm25(args.ranker_filename)
     elif args.model in ['BERT', 'bert']:
-        evaluator.evaluate_bert(args.bert_filename)
+        evaluator.evaluate_bert()
     else:
         raise ValueError('Available models: BM25 or BERT')

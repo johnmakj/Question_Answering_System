@@ -59,8 +59,8 @@ class SquadTokenizer:
 
         questions = list(batch[0])
         contexts = list(batch[1])
-        encoding = self.tokenizer(questions, contexts, padding="longest", truncation=True, max_length=self.max_length,
-                                  return_tensors='pt')
+        encoding = self.tokenizer(questions, contexts, padding="max_length", truncation=True,
+                                  max_length=self.max_length, return_tensors='pt')
 
         def get_index(indexes):
             final = []

@@ -5,6 +5,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 from src.machine_learning.training.bert_qa_finetuning import BertQAFinetuning
+from src.machine_learning.training.bert_qa_layer import CustomQuestionAnsweringModel
 from src.machine_learning.training.document_retrieval import DocumentRetrieval
 from src.tools.general_tools import load_pickled_data, get_filepath, load_yaml_config
 
@@ -15,11 +16,12 @@ config = load_yaml_config(DEFAULT_CONFIG_PREPROCESSING_PATH)
 data = load_pickled_data(get_filepath("results/data_preprocessing", config["demo"]["dataset"]))
 nlp = load_pickled_data(get_filepath("results/models", config["demo"]["nlp"]))
 ranker = load_pickled_data(get_filepath("results/models", config["demo"]["ranker"]))
+model = CustomQuestionAnsweringModel.from_pretrained(config["demo"]["bert_file"])
 
 
 def question_answering(question: str):
     relevant_document = DocumentRetrieval(data, nlp).retrieve_document(question, ranker)
-    answer = BertQAFinetuning.question_answering(config["demo"]["bert_file"], question, relevant_document)
+    answer = BertQAFinetuning.question_answering(model, question, relevant_document)
     return relevant_document, answer
 
 
@@ -74,7 +76,9 @@ if submit:
         relevant_doc, answer = question_answering(query)
         st.markdown(relevant_doc, unsafe_allow_html=True)
         final_answer = st.markdown(f"#### Answer: ")
-        st.markdown(answer, unsafe_allow_html=True)
-
+        if len(answer):
+            st.markdown(answer, unsafe_allow_html=True)
+        else:
+            st.markdown("Cannot provide answer to your question", unsafe_allow_html=True)
 if query:
     st.write("")

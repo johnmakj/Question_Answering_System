@@ -5,6 +5,7 @@ import torch
 from transformers import BertForQuestionAnswering, BertTokenizerFast
 
 from src.machine_learning.training.bert_qa_finetuning import BertQAFinetuning
+from src.machine_learning.training.bert_qa_layer import CustomQuestionAnsweringModel
 from src.tools.evaluation_tools import metric_max_over_ground_truths, exact_match_score, f1_score
 from src.tools.general_tools import get_filepath, load_yaml_config
 
@@ -21,10 +22,9 @@ class BertEvaluation(BertQAFinetuning):
         Args:
             preprocessed_data (pd.DataFrame): A preprocessed dataframe containing context, questions, answers along
             with the start and end positions of the answer
-            model_filename (str): the name of file where the pretrained model is
         """
         super().__init__(preprocessed_data)
-        self.model = BertForQuestionAnswering.from_pretrained("jmakj/bert-base-finetuned-squad")
+        self.model = CustomQuestionAnsweringModel.from_pretrained(config["bert_qa"]["eval_model_name"])
         self.question_eval = zip(preprocessed_data["question"],
                                  preprocessed_data["context"],
                                  preprocessed_data["possible_answers"])
@@ -45,11 +45,17 @@ class BertEvaluation(BertQAFinetuning):
             inputs = tokenizer(question, context, return_tensors="pt", max_length=512, truncation=True).to(device)
 
             output = model(**inputs)
-            start_idx = torch.argmax(output.start_logits)
-            end_idx = torch.argmax(output.end_logits) + 1
+            start_logits, end_logits = output
+            start_logits = start_logits.squeeze(-1)
+            end_logits = end_logits.squeeze(-1)
+
+            # Get the predicted start and end positions
+            start_idx = torch.argmax(start_logits).item()
+            end_idx = torch.argmax(end_logits).item()
+
             answer = tokenizer.convert_tokens_to_string(
                 tokenizer.convert_ids_to_tokens(inputs['input_ids'][0][start_idx:end_idx]))
-            print(answer)
+
             exact_match += metric_max_over_ground_truths(
                 exact_match_score, answer, ground_truth)
             f1 += metric_max_over_ground_truths(

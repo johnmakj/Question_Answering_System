@@ -1,14 +1,15 @@
 #configuration file for bert finetuning
 
 bert_qa:
-  n_epochs: 1
+  n_epochs: 3
   batch_size: 2
   num_workers: 6
   learning_rate: 2e-5
   weight_decay: 1e-8
   model_name: bert-base-finetuned-squad
   token: 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
+  eval_model_name: jmakj/bert-base-finetuned-squad
 
 pretrained:
-  model: BertForQuestionAnswering.from_pretrained("bert-base-uncased")
+  model: bert-base-uncased
   tokenizer: BertTokenizerFast.from_pretrained("bert-base-uncased")
