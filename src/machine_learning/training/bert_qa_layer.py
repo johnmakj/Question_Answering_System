@@ -54,7 +54,6 @@ class CustomQuestionAnsweringModel(BertPreTrainedModel):
                 loss = (start_loss + end_loss) / 2
             else:
                 # Handle the case where start_positions or end_positions are out of range
-                print("Problem")
                 start_positions = torch.clamp(start_positions, 0, input_ids.size(1) - 1)
                 end_positions = torch.clamp(end_positions, 0, input_ids.size(1) - 1)
                 loss_fct = nn.CrossEntropyLoss()
