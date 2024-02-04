@@ -35,40 +35,35 @@ class CustomQuestionAnsweringModel(BertPreTrainedModel):
         sequence_output = outputs.last_hidden_state
         logits = self.qa_outputs(sequence_output)
 
-        start_logits, end_logits = logits.split(1, dim=-1)
-        start_logits = start_logits.squeeze(-1)
-        end_logits = end_logits.squeeze(-1)
+        # Apply softmax activation to logits
+        start_probs = torch.nn.functional.softmax(logits[:, :, 0], dim=-1)
+        end_probs = torch.nn.functional.softmax(logits[:, :, 1], dim=-1)
 
+        # Calculate log-probabilities for numerical stability
+        start_log_probs = torch.nn.functional.log_softmax(logits[:, :, 0], dim=-1)
+        end_log_probs = torch.nn.functional.log_softmax(logits[:, :, 1], dim=-1)
+
+        # Calculate the cross-entropy loss
         loss = None
-        """
-        if start_positions is not None and end_positions is not None:
-            start_positions = torch.clamp(start_positions, 0, input_ids.size(1) - 1)
-            end_positions = torch.clamp(end_positions, 0, input_ids.size(1) - 1)
-            # If start and end positions are provided, calculate the loss
-            loss_fct = nn.CrossEntropyLoss()
-            start_loss = loss_fct(start_logits, start_positions)
-            end_loss = loss_fct(end_logits, end_positions)
-            loss = (start_loss + end_loss) / 2
-        """
 
         if start_positions is not None and end_positions is not None:
-
             if (start_positions >= 0).all() and (end_positions < input_ids.size(1)).all():
                 loss_fct = nn.CrossEntropyLoss()
-                start_loss = loss_fct(start_logits, start_positions)
-                end_loss = loss_fct(end_logits, end_positions)
+                start_loss = loss_fct(start_log_probs, start_positions)
+                end_loss = loss_fct(end_log_probs, end_positions)
                 loss = (start_loss + end_loss) / 2
             else:
                 # Handle the case where start_positions or end_positions are out of range
+                print("Problem")
                 start_positions = torch.clamp(start_positions, 0, input_ids.size(1) - 1)
                 end_positions = torch.clamp(end_positions, 0, input_ids.size(1) - 1)
                 loss_fct = nn.CrossEntropyLoss()
-                start_loss = loss_fct(start_logits, start_positions)
-                end_loss = loss_fct(end_logits, end_positions)
+                start_loss = loss_fct(start_log_probs, start_positions)
+                end_loss = loss_fct(end_log_probs, end_positions)
                 loss = (start_loss + end_loss) / 2
 
-        # Return logits along with the loss during training
+        # Return probabilities along with the log-probabilities and the loss during training
         if self.training:
-            return (start_logits, end_logits), loss
+            return (start_probs, end_probs, start_log_probs, end_log_probs), loss
         else:
-            return start_logits, end_logits
+            return start_probs, end_probs
