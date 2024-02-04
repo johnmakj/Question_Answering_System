@@ -32,7 +32,7 @@ Clone the project at a local workspace of your choosing with:
 
 ```bash
 $ cd /where/you/want/the/project/to/exist
-$ git clone git@github.com:johnmakj/Question_Answering_System.git
+$ git clone git@github.com:johnmakj/question_answering_system.git
 ```
 
 Then, at the root of the newly created folder:
