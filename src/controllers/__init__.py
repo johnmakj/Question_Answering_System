@@ -1,8 +1,3 @@
-import os
-from ast import literal_eval
-
-import pandas as pd
-
 from src.tools.general_tools import load_pickled_data, get_filepath, load_json_file
 
 
@@ -53,7 +48,6 @@ class ProcessedDataLoader(Controller, metaclass=Singleton):
 
         datasets_path = get_filepath('results/data_preprocessing', self.processed_data_filename)
         self.preprocessed_data = load_pickled_data(datasets_path)
-        #self.preprocessed_data.drop("index", axis=1, inplace=True)
         if nlp_filename is not None:
             nlp_path = get_filepath('results/models', nlp_filename)
             self.nlp = load_pickled_data(nlp_path)
