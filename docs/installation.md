@@ -20,9 +20,10 @@ Also, in order to ensure proper connectivity between all components, please inst
 below, via `apt`:
 
 ```bash
-$ apt install python3-pip  # Python package installer
-$ apt install python3-tk  # Tkinter - Writing Tk applications with Python 3.x
-$ apt install python3-dev  # header files and a static library for Python
+$ sudo apt update
+$ sudo apt-get update
+$ sudo apt upgrade -y
+$ sudo apt install git curl unzip tar make sudo vim wget -y
 ```
 
 ## Getting started
@@ -38,31 +39,7 @@ Then, at the root of the newly created folder:
 
 ```bash
 $ python3 -m pip install --upgrade pip
-$ python3 -m pip install poetry
+$ pip3 install -r requirements.txt
 ```
 
-This will install the project’s dependency manager, [poetry]([https://python-poetry.org](https://python-poetry.org)).
-
-To install all the project dependencies (required and dev) that will be needed during development, simply type:
-
-```bash
-$ poetry install
-```
-
-**NOTE**: An error `NoCompatiblePythonVersionFound` may arise if your system-wide python is not compatible with the
-specification requested in the `pyproject.toml`.
-
-In that case, use your package installer (`apt`, `packman`, etc.) to explicitly install `python3.8` in your
-system. After ensuring that this version is included in the PATH, the command `poetry env use python3.10` will
-now ensure that the installation can proceed without problems.
-
-For every other “poetry install” related error (e.g. `TooManyRedirects`), something like:
-
-```bash
-$ poetry cache clear pypi --all
-```
-
-and re-install should probably solve it.
-
-If nothing works, create a virtual environment for python 3.10 with pyenv and pip install the packages mentioned in the 
-pyproject.toml file.
+This will install the project’s dependencies
