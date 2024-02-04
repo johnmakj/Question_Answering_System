@@ -52,6 +52,7 @@ class CustomQuestionAnsweringModel(BertPreTrainedModel):
         """
 
         if start_positions is not None and end_positions is not None:
+
             if (start_positions >= 0).all() and (end_positions < input_ids.size(1)).all():
                 # Continue with the calculation
                 loss_fct = nn.CrossEntropyLoss()
