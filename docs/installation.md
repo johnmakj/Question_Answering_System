@@ -40,6 +40,8 @@ Then, at the root of the newly created folder:
 ```bash
 $ python3 -m pip install --upgrade pip
 $ pip3 install -r requirements.txt
+$ python3 -m spacy download en_core_web_sm
+$ export PYTHONPATH=/path/to/the/project:$PYTHONPATH
 ```
 
-This will install the project’s dependencies
+This will install the project’s dependencies and set up the system to run the scripts.
